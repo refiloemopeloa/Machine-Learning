@@ -9,12 +9,18 @@ def make_dataset(N,m=2):
 
     return X
 
-def make_targets(N):
+def linear_function(x1, x2):
+    return 2*x1 + 3*x2 - 1
+
+def make_targets(N, dataset):
     T = np.empty(shape=(N,1),dtype=int)
 
     for row in range(N):
-        row_entry = np.random.randint(0,2,(1,1))
-        T[row] = row_entry
+        if linear_function(dataset[row,0],dataset[row,1]) <= 0:
+            T[row] = 0
+        else:
+            T[row] = 1
+
 
 def main():
     N = int(input("N:\t"))

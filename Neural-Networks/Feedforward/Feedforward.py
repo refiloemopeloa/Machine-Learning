@@ -22,3 +22,6 @@ def get_biases(layer_size):
 
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
+def activation_function(x, function):
+    if function == 'sigmoid':
+        return sigmoid(x)

@@ -20,3 +20,5 @@ def get_weights(input_size, layer_size):
 def get_biases(layer_size):
     return np.reshape(np.random.uniform(-1, 1, size=(layer_size,1)), layer_size)
 
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))

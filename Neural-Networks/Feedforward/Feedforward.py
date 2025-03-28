@@ -25,3 +25,7 @@ def sigmoid(x):
 def activation_function(x, function):
     if function == 'sigmoid':
         return sigmoid(x)
+def feedforward(a, W, b, function):
+    aW = np.matmul(a,W)
+    aWb = aW + b
+    return activation_function(aWb, function)

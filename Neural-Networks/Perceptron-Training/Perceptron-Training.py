@@ -1,6 +1,6 @@
 import numpy as np
 
-def make_dataset(N,m=2):
+def generate_dataset(N,m=2):
     X = np.empty(shape=(N,m),dtype=int)
 
     for row in range(N):
@@ -12,7 +12,7 @@ def make_dataset(N,m=2):
 def linear_function(x1, x2):
     return 2*x1 + 3*x2 - 1
 
-def make_targets(N, dataset):
+def generate_targets(N, dataset):
     T = np.empty(shape=(N,1),dtype=int)
 
     for row in range(N):

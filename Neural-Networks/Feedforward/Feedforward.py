@@ -29,3 +29,7 @@ def feedforward(a, W, b, function):
     aW = np.matmul(a,W)
     aWb = aW + b
     return activation_function(aWb, function)
+def print_output(a):
+    for ai in a:
+        print(ai, end=' ')
+    print()

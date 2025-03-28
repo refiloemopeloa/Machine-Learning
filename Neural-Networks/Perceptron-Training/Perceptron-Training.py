@@ -84,9 +84,28 @@ def main():
     N = int(input("N:\t"))
     m = int(input("m:\t"))
 
-    X = make_dataset(N,m)
+    X, T = sample_input()
 
-    print(X)
+    # X = generate_dataset(N,m)
+    # T = generate_targets(N,X)
+
+    # weights = generate_weights(m)
+    # threshold = generate_threshold()
+
+    weights = np.array([0.5, 0.5])
+    threshold = 0.5
+    learning_rate = 0.01
+    stop_condition = 0.001
+
+    print_data(X, T)
+
+    print("Before training:")
+    print_state(weights, threshold)
+
+    weights, threshold, epochs = train_perceptron(m, N, X, weights, T, threshold, learning_rate, stop_condition)
+
+    print("After training:")
+    print_state(weights, threshold)
 
 if __name__ == '__main__':
     main()

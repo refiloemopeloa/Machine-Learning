@@ -1,21 +1,12 @@
-import numpy as np
-
-# cluster centres
-def cluster_centre(input_list):
-    output_list = np.zeros(shape=(3,2))
-    for i in range(0, 6, 2):
-        point = np.array([input_list[i], input_list[i+1]])
-        output_list[int(i/2)] = point
-        
-    return output_list
-
 def make_cluster_centres():
-    input_list = np.array([])
-    for i in range(6):
-        coordinate = float(input())
-        input_list = np.append(input_list, coordinate)
+    input_list = []
+    for i in range(3):
+        x = float(input())
+        y = float(input())
+        coordinate = [x,y]
+        input_list.append(coordinate)
         
-    return cluster_centre(input_list)
+    return input_list
 
 # k-means algorithm
 
@@ -34,7 +25,7 @@ def euclidean_distance(point_1, point_2):
     return pow(distance,0.5)
 
 def euclidean_list(point, cluster_centres):
-    min = np.iinfo(np.int64).max
+    min = float('inf')
     index = 0
     counter = 0
     
@@ -48,50 +39,65 @@ def euclidean_list(point, cluster_centres):
     return index
     
 def get_avg(points):
-    coords = np.zeros(shape=(len(points[0])))
+    x = 0
+    y = 0
+
     for point in points:
-        for i in range(len(point)):
-            coords[i] += point[i]
+        x += point[0]
+        y += point[1]
         
-    for i in range(len(coords)):
-        coords[i] /= len(points)
+    x /= len(points)
+    y /= len(points)
+    coords = [x,y]
     
     return coords    
+
+def empty_clusters(clusters):
+    empty_cluster_list = []
+    for i in range(len(clusters)-1,-1,-1):
+        if len(clusters[i]) == 0:
+            empty_cluster_list.append(i)
+        
+    return empty_cluster_list
+
+def delete_empty_clusters(clusters, cluster_centres, flag):
+    empty_cluster_list = empty_clusters(clusters)
+    
+    for index in empty_cluster_list:
+        clusters.pop(index)
+        if not flag:
+            cluster_centres.pop(index)
+    
+    return clusters, cluster_centres
         
 def k_means(cluster_centres, data):
-    centre_prev = np.array([[0,0],[0,0],[0,0]])
-    centre_curr = np.array([[1,1],[1,1],[1,1]])
-    clusters = {
-        0:[],
-        1:[],
-        2:[]    
-    }
+    centre_prev = [[0,0],[0,0],[0,0]]
+    centre_curr = [[1,1],[1,1],[1,1]]
+    clusters = [[],[],[]]
+    flag = False
     while not stopping_condition(centre_prev, centre_curr):
-        centre_prev =np.copy(cluster_centres)    
-        clusters = {
-            0:[],
-            1:[],
-            2:[]    
-        }
+        clusters = [[],[],[]]
+        centre_prev = cluster_centres.copy()  
         for point in data:
             index = euclidean_list(point, cluster_centres)
-            clusters[index].append(point)            
-            
-        counter = 0
-        for cluster in clusters.values():
-            if (len(cluster) == 0):
-                continue
-            cluster_centres[counter] = get_avg(cluster)
-            counter += 1           
-        centre_curr = np.copy(cluster_centres)
-    
+            clusters[index].append(point)      
+        
+        clusters, cluster_centres = delete_empty_clusters(clusters, cluster_centres, flag)
+        flag = True
+        
+        for i in range(len(clusters)):
+            cluster = clusters[i]
+            cluster_centres[i] = get_avg(cluster)
+        centre_curr = cluster_centres.copy()
+        
+     
     return cluster_centres, clusters
 
 # compute loss
 
-def loss(clusters, cluster_centres, k):
+def loss(clusters, cluster_centres):
     error = 0
-    for i in range(k):
+    for i in range(len(clusters)):
         distance_error = 0
         cluster = clusters[i]
         for point in cluster:
@@ -105,7 +111,7 @@ def main():
     k=3
 
     # dataset
-    data = np.array([[0.22,0.33],
+    data = [[0.22,0.33],
                     [0.45,0.76],
                     [0.73,0.39],
                     [0.25,0.35],
@@ -124,13 +130,13 @@ def main():
                     [0.10,0.89],
                     [0.55,0.09],
                     [0.75,0.35],
-                    [0.44,0.55]])
+                    [0.44,0.55]]
 
     cluster_centres = make_cluster_centres()
 
     cluster_centres, clusters = k_means(cluster_centres, data)
 
-    print(f'{loss(clusters, cluster_centres, k):.4f}')
+    print(f'{loss(clusters, cluster_centres):.4f}')
     
     return 0
 

@@ -20,7 +20,12 @@ def make_cluster_centres():
 # k-means algorithm
 
 def stopping_condition(centre_prev, centre_curr):
-    return True if (abs(centre_curr - centre_prev).all()==np.array([0,0,0]).all()) else False
+    for i in range(len(centre_curr)):
+        for j in range(len(centre_curr[i])):
+            if abs(centre_curr[i][j] - centre_prev[i][j]) != 0:
+                return False
+    return True
+
 
 def euclidean_distance(point_1, point_2):
     distance = 0
@@ -54,14 +59,13 @@ def get_avg(points):
     return coords    
         
 def k_means(cluster_centres, data):
-    centre_prev = np.array([0,0,0])
-    centre_curr = np.array([1,1,1])
+    centre_prev = np.array([[0,0],[0,0],[0,0]])
+    centre_curr = np.array([[1,1],[1,1],[1,1]])
     clusters = {
         0:[],
         1:[],
         2:[]    
     }
-    
     while not stopping_condition(centre_prev, centre_curr):
         centre_prev =np.copy(cluster_centres)    
         clusters = {
@@ -75,6 +79,8 @@ def k_means(cluster_centres, data):
             
         counter = 0
         for cluster in clusters.values():
+            if (len(cluster) == 0):
+                continue
             cluster_centres[counter] = get_avg(cluster)
             counter += 1           
         centre_curr = np.copy(cluster_centres)
@@ -124,7 +130,7 @@ def main():
 
     cluster_centres, clusters = k_means(cluster_centres, data)
 
-    print(round(loss(clusters, cluster_centres, k), 4))
+    print(f'{loss(clusters, cluster_centres, k):.4f}')
     
     return 0
 

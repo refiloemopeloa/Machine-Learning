@@ -81,3 +81,52 @@ def k_means(cluster_centres, data):
     
     return cluster_centres, clusters
 
+# compute loss
+
+def loss(clusters, cluster_centres, k):
+    error = 0
+    for i in range(k):
+        distance_error = 0
+        cluster = clusters[i]
+        for point in cluster:
+            distance_error += pow(euclidean_distance(point, cluster_centres[i]), 2)
+        error+=distance_error
+    
+    return error
+
+def main():
+    # number of clusters
+    k=3
+
+    # dataset
+    data = np.array([[0.22,0.33],
+                    [0.45,0.76],
+                    [0.73,0.39],
+                    [0.25,0.35],
+                    [0.51,0.69],
+                    [0.69,0.42],
+                    [0.41,0.49],
+                    [0.15,0.29],
+                    [0.81,0.32],
+                    [0.50,0.88],
+                    [0.23,0.31],
+                    [0.77,0.30],
+                    [0.56,0.75],
+                    [0.11,0.38],
+                    [0.81,0.33],
+                    [0.59,0.77],
+                    [0.10,0.89],
+                    [0.55,0.09],
+                    [0.75,0.35],
+                    [0.44,0.55]])
+
+    cluster_centres = make_cluster_centres()
+
+    cluster_centres, clusters = k_means(cluster_centres, data)
+
+    print(loss(clusters, cluster_centres, k))
+    
+    return 0
+
+if __name__ == "__main__":
+    main()

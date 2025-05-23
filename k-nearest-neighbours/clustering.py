@@ -124,7 +124,7 @@ def main():
 
     cluster_centres, clusters = k_means(cluster_centres, data)
 
-    print(loss(clusters, cluster_centres, k))
+    print(round(loss(clusters, cluster_centres, k), 4))
     
     return 0
 
